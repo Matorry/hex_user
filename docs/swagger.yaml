@@ -1,0 +1,159 @@
+openapi: 3.0.0
+info:
+  title: Hexagonal API
+  version: 1.0.0
+  description: API con arquitectura hexagonal, JWT y Prisma
+
+servers:
+  - url: http://localhost:3000
+
+paths:
+  /auth/login:
+    post:
+      summary: Iniciar sesión
+      tags:
+        - Autenticación
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - pswd
+              properties:
+                email:
+                  type: string
+                  format: email
+                pswd:
+                  type: string
+                  format: password
+      responses:
+        "200":
+          description: Token JWT
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+
+  /users:
+    post:
+      summary: Crear usuario
+      tags:
+        - Usuarios
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserInput"
+      responses:
+        "201":
+          description: Usuario creado exitosamente
+
+    get:
+      summary: Listar usuarios
+      tags:
+        - Usuarios
+      responses:
+        "200":
+          description: Lista de usuarios
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/UserOutput"
+
+  /users/{id}:
+    get:
+      summary: Obtener usuario
+      tags:
+        - Usuarios
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Usuario encontrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserOutput"
+        "404":
+          description: Usuario no encontrado
+
+    put:
+      summary: Actualizar usuario
+      tags:
+        - Usuarios
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserInput"
+      responses:
+        "200":
+          description: Usuario actualizado correctamente
+        "400":
+          description: Datos inválidos
+        "500":
+          description: Error del servidor
+
+    delete:
+      summary: Eliminar usuario
+      tags:
+        - Usuarios
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Usuario eliminado correctamente
+        "404":
+          description: Usuario no encontrado
+
+components:
+  schemas:
+    UserInput:
+      type: object
+      required:
+        - userName
+        - email
+        - pswd
+      properties:
+        userName:
+          type: string
+        email:
+          type: string
+          format: email
+        pswd:
+          type: string
+          format: password
+
+    UserOutput:
+      type: object
+      properties:
+        id:
+          type: string
+        userName:
+          type: string
+        email:
+          type: string
