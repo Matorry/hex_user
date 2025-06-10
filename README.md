@@ -40,7 +40,7 @@ Jest + Supertest
 Crea un archivo .env en la raíz del proyecto con:
 
 ```env
-DATABASE_URL="url_ddbb"
+DATABASE_URL=url_ddbb
 JWT_SECRET=clave_ultra_secreta
 RABBITMQ_URL=amqp://foo@foo
 ```
